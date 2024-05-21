@@ -1,30 +1,40 @@
 #!/usr/bin/python3
-'''Utf-8 charachter validation module
-'''
+"""
+UTF-8 Validation
+"""
 
 
 def validUTF8(data):
-    '''Return true if the data is valid utf8
-    else false
-    '''
-    cnt = 0
-    for num in data:
-        if cnt == 0:
-            if num & 128 == 0:
-                cnt = 0
-            elif num & 224 == 192:
-                cnt = 1
-            elif num & 240 == 224:
-                cnt = 2
-            elif num & 248 == 240:
-                cnt = 3
-            else:
-                return False
-        else:
-            if num & 192 != 128:
-                return False
-            cnt -= 1
-    if cnt == 0:
-        return True
-    return False
+    """ UTF-8 Validation """
+    flag_num = 0
 
+    if len(data) == 0:
+        return True
+
+    for elem in data:
+        b_elem = '{0:08b}'.format(elem)[-8:]
+        if flag_num == 0:
+            len_num = 0
+            for digit in b_elem:
+                if digit == "1":
+                    len_num += 1
+                else:
+                    break
+                if len_num > 4:
+                    return False
+            if len_num == 1:
+                return False
+            if len_num != 0:
+                flag_num = 1
+                len_num -= 1
+        else:
+            if b_elem[:2] != "10":
+                return False
+            len_num -= 1
+            if len_num == 0:
+                flag_num = 0
+
+    if len_num > 0:
+        return False
+
+    return True
