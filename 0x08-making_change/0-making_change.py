@@ -1,25 +1,26 @@
 #!/usr/bin/python3
-'''
-A modul which solves coin problem
-'''
+""" 0x19. Making Change """
 
 
 def makeChange(coins, total):
-    '''
-    A function which returns fewest number of coins needed to
-    meet a given total coin number if total is not less than 0
-    '''
-    if total <= 0:
-        return 0
+    """ 0x19. Making Change """
 
-    dp = [float('inf')] * (total + 1)
-    dp[0] = 0
+    count = 0
+    index = 0
+    length = len(coins)
 
-    for coin in coins:
-        for i in range(coin, total + 1):
-            dp[i] = min(dp[i], dp[i - coin] + 1)
-
-    if dp[total] == float('inf'):
+    if length == 0 and total != 0:
         return -1
-    else:
-        return dp[total]
+
+    coins.sort(reverse=True)
+
+    while total > 0:
+        if coins[index] <= total:
+            total -= coins[index]
+            count += 1
+        else:
+            index += 1
+            if index >= length:
+                return -1
+
+    return count
